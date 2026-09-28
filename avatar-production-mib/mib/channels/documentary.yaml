@@ -1,0 +1,22 @@
+name: Documentary
+description: Real stories, told like a streaming documentary.
+cost_per_min_free: 0.08
+niche: True stories, human interest, real events.
+default_minutes: 20
+mode: frontier
+visuals:
+  image_style: photorealistic documentary, journalistic photography, dramatic natural
+    lighting, cinematic 16:9, archival quality
+  color_palette:
+  - '#1a1a1a'
+  - '#ffffff'
+  - '#888888'
+  text_color: white
+audio:
+  voice_provider: gemini_tts
+  voice: Orbit
+  speed: 1.0
+script:
+  tone: narrative documentary, conversational, emotionally engaging
+  hook_style: compelling real-life opening moment
+sfx: true

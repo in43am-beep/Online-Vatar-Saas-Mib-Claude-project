@@ -1,0 +1,21 @@
+name: COURTSIDE — Sports Documentaries
+description: Real photos, old newspapers, Kodak strips, VHS — the story first.
+cost_per_min_free: 0.04
+niche: Sports history, athlete stories, game-changing moments.
+default_minutes: 25
+mode: frontier
+visuals:
+  image_style: sports photography, vintage newspaper clippings, VHS texture, Kodak
+    grain, stadium crowd, athletic action shots
+  color_palette:
+  - '#1a1a1a'
+  - '#ffffff'
+  - '#d4a24e'
+audio:
+  voice_provider: gemini_tts
+  voice: Puck
+  speed: 1.05
+script:
+  tone: sports broadcast energy, dramatic, triumphant
+  hook_style: the defining moment of the game or career
+sfx: true

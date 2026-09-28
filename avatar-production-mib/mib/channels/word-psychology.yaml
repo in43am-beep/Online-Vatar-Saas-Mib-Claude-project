@@ -1,0 +1,17 @@
+name: Word — by Word, Sharper Than the Moment
+description: Psychology meets word-by-word revelation. Dark and sharp.
+cost_per_min_free: 0.05
+niche: Psychology, human behavior, dark truths, self-improvement.
+default_minutes: 15
+mode: frontier
+visuals:
+  image_style: dark minimalist psychology visuals, brain illustrations, human silhouettes,
+    typographic emphasis, black background with gold accents
+audio:
+  voice_provider: gemini_tts
+  voice: Charon
+  speed: 0.88
+script:
+  tone: sharp, insightful, reveals uncomfortable truths
+  hook_style: a psychological truth most people deny
+sfx: false

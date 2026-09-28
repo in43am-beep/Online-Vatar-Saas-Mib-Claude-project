@@ -1,0 +1,17 @@
+name: NEWS — Geopolitics & News Explainers
+description: 'A newsroom''s best segment: heat maps, arrows, tickers, panels over...'
+cost_per_min_free: 0.05
+niche: Current events, geopolitics, world news explained.
+default_minutes: 15
+mode: frontier
+visuals:
+  image_style: news broadcast graphics, world maps with arrows, government buildings,
+    diplomatic photography, data visualization, teal and orange news aesthetic
+audio:
+  voice_provider: gemini_tts
+  voice: Charon
+  speed: 1.0
+script:
+  tone: objective news anchor, clear, authoritative, factual
+  hook_style: breaking development or key question
+sfx: true

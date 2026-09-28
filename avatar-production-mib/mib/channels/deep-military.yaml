@@ -1,0 +1,22 @@
+name: DEEP — Military & Tech Mysteries
+description: 'Teal and orange: stencil dates, sonar, cutaways, the map room.'
+cost_per_min_free: 0.03
+niche: Military operations, tech mysteries, classified secrets.
+default_minutes: 30
+mode: frontier
+visuals:
+  image_style: military documentary, radar screens, tactical maps, classified documents,
+    teal and orange color grading, cinematic dark
+  color_palette:
+  - '#0d3d4a'
+  - '#e8934a'
+  - '#1a2a2a'
+  text_color: teal
+audio:
+  voice_provider: gemini_tts
+  voice: Fenrir
+  speed: 0.95
+script:
+  tone: authoritative, suspenseful, classified briefing style
+  hook_style: declassified revelation or mission briefing
+sfx: true

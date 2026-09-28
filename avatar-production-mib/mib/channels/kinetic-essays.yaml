@@ -1,0 +1,17 @@
+name: KINETIC — Essays Where Words Are the Picture
+description: 'The words are the picture: clusters, white pages, phone cards, comments.'
+cost_per_min_free: 0.1
+niche: Opinion essays, social commentary, viral topics.
+default_minutes: 10
+mode: frontier
+visuals:
+  image_style: typographic art, word clusters, minimalist white backgrounds, bold
+    sans-serif text visuals, social media comment aesthetics
+audio:
+  voice_provider: gemini_tts
+  voice: Puck
+  speed: 1.1
+script:
+  tone: punchy, opinionated, viral essay style
+  hook_style: controversial or counter-intuitive statement
+sfx: false

@@ -1,0 +1,18 @@
+name: ATLAS — Cartoon History Explainers
+description: 'History as a bold cartoon: the time machine, the flipchart, the paint
+  wipe.'
+cost_per_min_free: 0.15
+niche: History explained visually, world events, civilizations.
+default_minutes: 20
+mode: frontier
+visuals:
+  image_style: bold editorial cartoon illustration, bright primary colors, comic book
+    style, historical maps, hand-drawn aesthetic, vintage poster art
+audio:
+  voice_provider: gemini_tts
+  voice: Puck
+  speed: 1.05
+script:
+  tone: energetic history teacher, entertaining, educational
+  hook_style: the moment that changed history
+sfx: true

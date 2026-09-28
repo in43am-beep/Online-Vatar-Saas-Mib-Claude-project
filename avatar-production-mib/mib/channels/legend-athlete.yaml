@@ -1,0 +1,17 @@
+name: LEGEND — Told in the Athlete's Own Voice
+description: The athlete's story, told as if they're speaking directly.
+cost_per_min_free: 0.09
+niche: Athlete biographies, sports legends, career stories.
+default_minutes: 25
+mode: avatar
+visuals:
+  image_style: sports action photography, locker room moments, championship trophies,
+    training sessions, crowd cheering
+audio:
+  voice_provider: gemini_tts
+  voice: Fenrir
+  speed: 0.95
+script:
+  tone: first-person athlete voice, raw, authentic, emotional
+  hook_style: the defining career moment from the athlete's perspective
+sfx: true

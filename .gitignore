@@ -1,0 +1,69 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+*.so
+.eggs/
+*.egg-link
+
+# Virtual environments
+venv/
+env/
+.venv/
+.env/
+
+# Secrets / API Keys — NEVER commit these
+config/secrets.json
+secrets.json
+*.key
+*.pem
+.env
+.env.*
+
+# Output / Generated videos (too large for git)
+output/
+*.mp4
+*.mov
+*.avi
+*.webm
+*.wav
+*.mp3
+
+# Large assets — avatar source clips
+assets/avatars/**/*.mp4
+assets/avatars/**/*.mov
+assets/avatars/**/*_thumb.jpg
+
+# IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
+
+# Pytest / Coverage
+.pytest_cache/
+htmlcov/
+.coverage
+*.coveragerc
+
+# Node (if any)
+node_modules/
+
+# Gemini / AI IDE cache
+.gemini/
+.agents/

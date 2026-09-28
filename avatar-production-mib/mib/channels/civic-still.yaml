@@ -1,0 +1,17 @@
+name: CIVIC STILL — Investigative Stories
+description: Investigative journalism meets cinematic storytelling.
+cost_per_min_free: 0.06
+niche: Investigative journalism, corporate wrongdoing, whistleblowers.
+default_minutes: 30
+mode: frontier
+visuals:
+  image_style: investigative journalism photography, corporate buildings, leaked documents,
+    shadowy corridors, high contrast black and white
+audio:
+  voice_provider: gemini_tts
+  voice: Fenrir
+  speed: 0.95
+script:
+  tone: investigative reporter, evidence-based, building suspense
+  hook_style: the document or moment that blew the case open
+sfx: true

@@ -1,0 +1,17 @@
+name: HUSTLE — Make Money & Youth Business
+description: Youth business, side hustles, money motivation.
+cost_per_min_free: 0.09
+niche: Entrepreneurship, side hustles, financial freedom, Gen Z business.
+default_minutes: 12
+mode: avatar
+visuals:
+  image_style: startup culture photography, money and success visuals, laptop lifestyle,
+    city skyline, motivational aesthetic, neon highlights
+audio:
+  voice_provider: gemini_tts
+  voice: Puck
+  speed: 1.1
+script:
+  tone: high energy, motivational, Gen Z entrepreneur voice
+  hook_style: income number or shocking business fact
+sfx: true

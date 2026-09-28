@@ -1,0 +1,16 @@
+name: Modern Homes
+description: Plain home advice from someone who has actually done it.
+cost_per_min_free: 0.09
+niche: Home improvement, interior design, real estate.
+default_minutes: 15
+mode: frontier
+visuals:
+  image_style: interior design photography, clean modern spaces, natural light, architectural
+    details, home renovation before/after
+audio:
+  voice_provider: gemini_tts
+  voice: Aoede
+  speed: 1.0
+script:
+  tone: practical, helpful, first-person experience
+sfx: false

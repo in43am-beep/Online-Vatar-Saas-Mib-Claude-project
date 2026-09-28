@@ -1,0 +1,22 @@
+name: DOSSIER — True Crime & Internet Mysteries
+description: 'A case file on a black table: typed alerts, red crosshairs, real...'
+cost_per_min_free: 0.04
+niche: True crime, internet mysteries, cold cases, investigations.
+default_minutes: 30
+mode: frontier
+visuals:
+  image_style: case file documents, crime scene photos (tasteful), red string board,
+    classified stamps, noir photography, dark desk
+  color_palette:
+  - '#0a0a0a'
+  - '#cc2200'
+  - '#ffffff'
+  text_color: red
+audio:
+  voice_provider: gemini_tts
+  voice: Fenrir
+  speed: 0.92
+script:
+  tone: investigative journalist, suspenseful, evidence-driven
+  hook_style: the moment that changed the case
+sfx: true

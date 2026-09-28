@@ -1,0 +1,23 @@
+name: Carl Jung — Dark Psychology
+description: The original Frontier look, built for long videos.
+cost_per_min_free: 0.05
+niche: Dark psychology, Jungian concepts, shadow self, archetypes.
+default_minutes: 30
+mode: frontier
+visuals:
+  image_style: dark moody psychological, dramatic shadows, black and white portrait,
+    candlelight, vintage philosophical aesthetic, no text
+  color_palette:
+  - '#1a1a1a'
+  - '#d4a24e'
+  - '#8b7355'
+  text_color: gold
+audio:
+  voice_provider: gemini_tts
+  voice: Charon
+  speed: 0.9
+script:
+  tone: philosophical, introspective, slow-burn, thought-provoking
+  hook_style: paradox or provocative Jungian concept
+  target_wpm: 130
+sfx: false

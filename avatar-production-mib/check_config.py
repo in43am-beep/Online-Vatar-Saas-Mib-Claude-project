@@ -1,0 +1,20 @@
+from mib.config import load_config, load_secrets
+cfg = load_config()
+sec = load_secrets()
+print('=== API KEYS ===')
+print('gemini_api_key:', 'SET' if sec.get('gemini_api_key') else 'MISSING')
+print('ai33pro_api_key:', 'SET' if sec.get('ai33pro_api_key') else 'MISSING')
+print('anthropic_api_key:', 'SET' if sec.get('anthropic_api_key') else 'MISSING')
+print()
+print('=== CHANNELS ===')
+for cid, ch in (cfg.get('channels') or {}).items():
+    name = ch.get('name', cid)
+    mode = ch.get('mode')
+    amode = ch.get('avatar_clip_mode', 'static')
+    niche = ch.get('niche', '')
+    voice = ch.get('voice', '')
+    print(f'  {cid}: {name} | mode={mode} | clip={amode} | niche={niche} | voice={voice}')
+print()
+print('=== PROVIDERS CONFIG ===')
+for k, v in (cfg.get('providers') or {}).items():
+    print(f'  {k}: {v}')

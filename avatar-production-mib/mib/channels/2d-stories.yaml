@@ -1,0 +1,17 @@
+name: 2D Stories — One Decision, Ten Years
+description: Second-person money stories, told over the years.
+cost_per_min_free: 0.15
+niche: Personal finance stories, life decisions, second-person narrative.
+default_minutes: 15
+mode: frontier
+visuals:
+  image_style: 2D flat illustration, simple character design, money and finance icons,
+    life timeline, clean vector art style
+audio:
+  voice_provider: gemini_tts
+  voice: Aoede
+  speed: 1.0
+script:
+  tone: second-person ('you'), financial storytelling, relatable life moments
+  hook_style: the one decision that changed everything financially
+sfx: false

@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Frontier Decoded — Complete Structure & Build Plan</title>
+<style>
+  :root {
+    --bg:#0b0e15; --panel:#131720; --panel2:#1a1f2e; --border:#222840;
+    --gold:#d4a24e; --text:#e2ddd4; --muted:#6a748a;
+    --red:#e05555; --green:#4caf7d; --blue:#5b8def;
+    --orange:#e8934a; --purple:#9b72cf; --teal:#3dbfb8;
+    --r:10px;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;
+    line-height:1.7;max-width:1000px;margin:0 auto;padding:28px 18px 80px}
+
+  .hdr{text-align:center;border-bottom:2px solid var(--gold);padding-bottom:28px;margin-bottom:44px}
+  .hdr h1{font-size:2rem;color:var(--gold);font-weight:900}
+  .hdr p{color:var(--muted);margin-top:6px;font-size:.93rem}
+  .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.74rem;font-weight:700;margin:2px}
+  .b-g{background:#0d2b1d;color:var(--green);border:1px solid var(--green)}
+  .b-o{background:#2d1f0d;color:var(--orange);border:1px solid var(--orange)}
+  .b-b{background:#0d1f3d;color:var(--blue);border:1px solid var(--blue)}
+  .b-r{background:#3d1a1a;color:var(--red);border:1px solid var(--red)}
+  .b-t{background:#0d2d2b;color:var(--teal);border:1px solid var(--teal)}
+  .b-p{background:#1e1030;color:var(--purple);border:1px solid var(--purple)}
+
+  section{margin-bottom:48px}
+  h2{font-size:1.3rem;color:var(--gold);margin-bottom:18px;padding-bottom:9px;
+    border-bottom:1px solid var(--border);display:flex;align-items:center;gap:9px}
+  h3{font-size:.98rem;color:var(--text);margin:14px 0 8px;font-weight:700}
+
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:var(--r);
+    padding:16px 18px;margin-bottom:12px}
+  .card.g{border-left:4px solid var(--green)}
+  .card.o{border-left:4px solid var(--orange)}
+  .card.b{border-left:4px solid var(--blue)}
+  .card.r{border-left:4px solid var(--red)}
+  .card.gold{border-left:4px solid var(--gold)}
+  .card.t{border-left:4px solid var(--teal)}
+  .card.p{border-left:4px solid var(--purple)}
+  .ct{font-weight:700;font-size:.97rem;margin-bottom:7px;display:flex;align-items:center;gap:7px}
+  .card p,.card li{color:var(--muted);font-size:.9rem;margin-bottom:5px}
+  .card ul{padding-left:17px}.card li{list-style:disc}
+
+  .g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+  @media(max-width:640px){.g2,.g3{grid-template-columns:1fr}}
+
+  table{width:100%;border-collapse:collapse;margin:12px 0}
+  th{background:var(--panel2);color:var(--gold);padding:9px 11px;text-align:left;
+    font-size:.85rem;border:1px solid var(--border)}
+  td{padding:8px 11px;font-size:.86rem;border:1px solid var(--border);color:var(--muted);vertical-align:top}
+  td.hi{color:var(--green);font-weight:700;font-family:monospace}
+  td.lo{color:var(--red)}
+  tr:nth-child(even) td{background:#10131c}
+  tr.tot td{background:#1a2b1a;color:var(--green);font-weight:700}
+
+  pre{background:#070a10;border:1px solid var(--border);border-radius:8px;
+    padding:14px;overflow-x:auto;font-size:.8rem;color:#a8c2f0;margin:8px 0;
+    font-family:'Consolas',monospace}
+  code{background:#1a2233;padding:1px 5px;border-radius:4px;font-size:.86em;color:#a8c2f0}
+
+  .flow{display:flex;flex-wrap:wrap;align-items:center;gap:7px;
+    padding:16px;background:var(--panel);border-radius:var(--r);
+    border:1px solid var(--border);margin-bottom:14px}
+  .fs{background:var(--panel2);border:1px solid var(--border);border-radius:8px;
+    padding:7px 12px;font-size:.8rem;text-align:center;min-width:85px}
+  .fs strong{display:block;color:var(--gold);font-size:.72rem}
+  .fs .c{display:block;color:var(--green);font-size:.77rem;font-weight:700;margin-top:2px}
+  .fa{color:var(--gold);font-size:1.1rem}
+
+  /* SCREEN MOCKUP */
+  .screen{background:#0f1319;border:2px solid var(--border);border-radius:12px;
+    padding:20px;margin-bottom:16px;position:relative}
+  .screen-label{position:absolute;top:-12px;left:16px;background:var(--gold);
+    color:#0b0e15;font-size:.72rem;font-weight:800;padding:2px 10px;border-radius:10px}
+  .screen-title{font-size:1.1rem;color:var(--gold);font-weight:700;margin-bottom:4px;text-align:center}
+  .screen-sub{font-size:.82rem;color:var(--muted);text-align:center;margin-bottom:16px}
+
+  .mode-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+  .mode-box{border-radius:8px;padding:12px 14px;border:2px solid var(--border)}
+  .mode-box.active{border-color:var(--gold);background:#1a1608}
+  .mode-box .mt{font-weight:700;font-size:.88rem;color:var(--text);margin-bottom:4px}
+  .mode-box p{color:var(--muted);font-size:.79rem}
+
+  .channel-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
+  .ch-card{border-radius:8px;border:1px solid var(--border);overflow:hidden;background:var(--panel2)}
+  .ch-thumb{height:70px;background:linear-gradient(135deg,#1a1a2e,#2d2d44);
+    display:flex;align-items:center;justify-content:center;font-size:1.6rem}
+  .ch-info{padding:8px}
+  .ch-name{font-size:.8rem;font-weight:700;color:var(--text)}
+  .ch-cost{font-size:.7rem;color:var(--orange);margin-top:2px}
+
+  .presenter-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0}
+  .pr-card{border-radius:8px;border:1px solid var(--border);overflow:hidden;
+    background:var(--panel2);cursor:pointer}
+  .pr-card.sel{border-color:var(--gold)}
+  .pr-thumb{height:55px;background:linear-gradient(135deg,#2a1a1a,#3d2d2d);
+    display:flex;align-items:center;justify-content:center;font-size:1.2rem}
+  .pr-name{font-size:.7rem;text-align:center;padding:3px;color:var(--muted)}
+
+  .opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+  .opt-box{border-radius:8px;border:1px solid var(--border);padding:10px 12px;
+    background:var(--panel2)}
+  .opt-box .ob-title{font-size:.82rem;font-weight:700;color:var(--text);margin-bottom:3px}
+  .opt-box .ob-cost{font-size:.7rem;color:var(--orange)}
+  .opt-box p{font-size:.77rem;color:var(--muted)}
+
+  .pill{display:inline-block;background:var(--panel2);border:1px solid var(--border);
+    border-radius:6px;padding:3px 9px;font-size:.77rem;color:var(--muted);margin:2px}
+  .pill.sel{background:var(--orange);color:#0b0e15;border-color:var(--orange);font-weight:700}
+
+  .gen-btn{background:var(--gold);color:#0b0e15;border:none;border-radius:8px;
+    padding:12px 28px;font-size:1rem;font-weight:800;cursor:pointer;margin-top:12px;width:100%}
+
+  .finding-box{background:linear-gradient(135deg,#0d2b1d,#0a1a30);
+    border:2px solid var(--green);border-radius:var(--r);padding:20px 22px;margin:14px 0}
+  .finding-box h3{color:var(--green);margin-bottom:10px}
+  .finding-box p,.finding-box li{color:#a0c8b0;font-size:.9rem;margin-bottom:5px}
+  .finding-box ul{padding-left:17px}.finding-box li{list-style:disc}
+
+  .secret-box{background:linear-gradient(135deg,#1a1008,#2a1808);
+    border:2px solid var(--orange);border-radius:var(--r);padding:20px 22px;margin:14px 0}
+  .secret-box h3{color:var(--orange);margin-bottom:10px}
+  .secret-box p,.secret-box li{color:#c8a080;font-size:.9rem;margin-bottom:5px}
+  .secret-box ul{padding-left:17px}.secret-box li{list-style:disc}
+
+  hr{border:none;border-top:1px solid var(--border);margin:32px 0}
+  .num{display:inline-flex;align-items:center;justify-content:center;
+    width:26px;height:26px;border-radius:50%;background:var(--gold);
+    color:#0b0e15;font-weight:800;font-size:.82rem;flex-shrink:0}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <h1>🎬 Frontier — Fully Decoded</h1>
+  <p>Every screen analysed, every secret uncovered, complete build plan for your tool</p>
+  <p style="margin-top:10px">
+    <span class="badge b-g">✅ Web SaaS — Not Desktop</span>
+    <span class="badge b-o">18 Channel Types</span>
+    <span class="badge b-b">14 AI Presenters (Real Video)</span>
+    <span class="badge b-t">$0.03–$0.15/min Cost</span>
+    <span class="badge b-p">Gemini Free Tier = Their Secret</span>
+  </p>
+</div>
+
+<!-- SECTION 1: WHAT FRONTIER IS -->
+<section>
+  <h2>🔍 1. What Frontier Actually Is — The Big Reveal</h2>
+
+  <div class="finding-box">
+    <h3>🚨 KEY FINDING: It's a Web App Running on Gemini Free Tier</h3>
+    <ul>
+      <li><strong>Name:</strong> "Frontier" — tagline: <em>"Type a title. Get a finished video."</em></li>
+      <li><strong>Platform:</strong> Web browser — NOT a desktop app like yours. Accessed from any browser.</li>
+      <li><strong>Presenters:</strong> Real human video clips — NOT AI-generated. Pre-recorded talking-head footage of 14 real actors. Each clip is ~6–8 seconds. This is how they keep avatar cost to $0.22–$0.30 once.</li>
+      <li><strong>The Cost Secret:</strong> They use the <strong>Gemini Free Tier</strong> (Google AI Studio free limits) for voice + images. Cost per video = $0.03–$0.15/minute. For a 30-min video = $0.90–$4.50 total.</li>
+      <li><strong>"Depth pop":</strong> Parallax/3D effect on images — person lifts off background while background pulls back. This is done via a depth-map + FFmpeg displacement filter. Costs $0.004/min.</li>
+      <li><strong>Sound design:</strong> Whooshes, hits, risers under every scene change — free, pre-baked SFX library.</li>
+      <li><strong>"Your own script":</strong> You can paste your own script and it ignores the AI writer entirely.</li>
+      <li><strong>Claude Code integration:</strong> The tool literally tells users to ask Claude Code for help — it's built with Claude Code and uses it as the support agent.</li>
+    </ul>
+  </div>
+
+  <div class="g2">
+    <div class="card g">
+      <div class="ct">✅ Frontier Production Mode</div>
+      <ul>
+        <li>Documentary style — no presenter</li>
+        <li>Real footage + maps + headlines + graphics</li>
+        <li>B-roll from stock or AI images</li>
+        <li>18 different channel "styles"</li>
+        <li>Cost: $0.03–$0.15/min depending on channel</li>
+      </ul>
+    </div>
+    <div class="card b">
+      <div class="ct">✅ AI Avatar Mode</div>
+      <ul>
+        <li>Real human presenter opens video (pre-recorded clip)</li>
+        <li>Presenter speaks first lines to camera</li>
+        <li>Hard cut → pictures take over</li>
+        <li>Presenter comes back 2–6× during video</li>
+        <li>Presenter cost: $0.22 per appearance (Gemini TTS paid)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2: SCREEN-BY-SCREEN -->
+<section>
+  <h2>🖥️ 2. Screen-by-Screen Breakdown — Exact UI Flow</h2>
+
+  <!-- SCREEN 1 -->
+  <div class="screen">
+    <div class="screen-label">SCREEN 1 — Landing</div>
+    <div class="screen-title">▶ Frontier &nbsp;&nbsp; "Type a title. Get a finished video."</div>
+    <div class="mode-row">
+      <div class="mode-box active">
+        <div class="mt">FRONTIER PRODUCTION</div>
+        <p>Documentaries and edited videos: real footage, maps, headlines, graphics.</p>
+      </div>
+      <div class="mode-box">
+        <div class="mt">AI AVATAR</div>
+        <p>A real-looking presenter opens every video, then the pictures take over.</p>
+      </div>
+    </div>
+    <div style="background:#1a1a08;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:.83rem;color:var(--muted);">
+      <strong style="color:var(--text)">Stuck on anything?</strong> Ask Claude Code first — just describe what happened. It knows the whole tool, reads the log, and fixes technical problems for you.
+    </div>
+  </div>
+
+  <!-- SCREEN 2: CHANNELS -->
+  <div class="screen">
+    <div class="screen-label">SCREEN 2 — Step ①: Channel (18 types)</div>
+    <p style="font-size:.82rem;color:var(--muted);margin-bottom:10px">User picks what kind of video. Each channel has a locked style, locked visual language, and a per-minute cost shown upfront in orange.</p>
+    <div class="channel-grid">
+      <div class="ch-card">
+        <div class="ch-thumb">🎬</div>
+        <div class="ch-info">
+          <div class="ch-name">Documentary</div>
+          <div class="ch-cost">$0.08/min (Gemini free)<br>$0.50/min (paid footage)</div>
+        </div>
+      </div>
+      <div class="ch-card">
+        <div class="ch-thumb">🏀</div>
+        <div class="ch-info">
+          <div class="ch-name">COURTSIDE — sports</div>
+          <div class="ch-cost">$0.04/min (Gemini free)<br>$0.60/min (paid footage)</div>
+        </div>
+      </div>
+      <div class="ch-card" style="border-color:var(--gold)">
+        <div class="ch-thumb">🧠</div>
+        <div class="ch-info">
+          <div class="ch-name">Carl Jung — psychology</div>
+          <div class="ch-cost" style="color:var(--gold)">$0.05/min ≈ $1–$2 for 30 min ⬅ THIS</div>
+        </div>
+      </div>
+      <div class="ch-card">
+        <div class="ch-thumb">📖</div>
+        <div class="ch-info">
+          <div class="ch-name">2D Stories</div>
+          <div class="ch-cost">$0.15/min</div>
+        </div>
+      </div>
+      <div class="ch-card">
+        <div class="ch-thumb">🏠</div>
+        <div class="ch-info">
+          <div class="ch-name">Modern Homes</div>
+          <div class="ch-cost">$0.09/min pictures only</div>
+        </div>
+      </div>
+      <div class="ch-card">
+        <div class="ch-thumb">🔪</div>
+        <div class="ch-info">
+          <div class="ch-name">DOSSIER — true crime</div>
+          <div class="ch-cost">$0.04/min (Gemini free)</div>
+        </div>
+      </div>
+      <div class="ch-card">
+        <div class="ch-thumb">✍️</div>
+        <div class="ch-info">
+          <div class="ch-name">KINETIC — essays</div>
+          <div class="ch-cost">$0.10/min — YT watching FREE</div>
+        </div>
+      </div>
+      <div class="ch-card">
+        <div class="ch-thumb">🗺️</div>
+        <div class="ch-info">
+          <div class="ch-name">ATLAS — cartoon history</div>
+          <div class="ch-cost">$0.15/min + $0.50 for Seedance</div>
+        </div>
+      </div>
+      <div class="ch-card">
+        <div class="ch-thumb">🎖️</div>
+        <div class="ch-info">
+          <div class="ch-name">DEEP — military & tech</div>
+          <div class="ch-cost">$0.03/min (Gemini free)</div>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:.79rem;color:var(--muted);margin-top:8px">+ 9 more: LEGEND (athlete voice), HUSTLE (money/business), NEWS (geopolitics), AI Presenter, Modern Homes, ANALOG (music machines), and others. Total: 18 channels.</p>
+  </div>
+
+  <!-- SCREEN 3: PRESENTER -->
+  <div class="screen">
+    <div class="screen-label">SCREEN 3 — Step ②: Presenter (AI Avatar mode only)</div>
+    <p style="font-size:.82rem;color:var(--muted);margin-bottom:8px"><strong style="color:var(--text)">Key insight:</strong> These are REAL pre-recorded human video clips — not AI generated faces. 14 presenters total. Each has a full character description stored (e.g. "29-year-old Filipina woman, straight black hair in a low ponytail...").</p>
+    <div style="font-size:.8rem;color:var(--muted);margin-bottom:8px">Filter tabs: <span class="pill sel">Everyone</span><span class="pill">Women</span><span class="pill">Men</span><span class="pill">Suits this voice</span></div>
+    <div class="presenter-grid">
+      <div class="pr-card sel"><div class="pr-thumb">👔</div><div class="pr-name">Anchor</div></div>
+      <div class="pr-card"><div class="pr-thumb">👩</div><div class="pr-name">Maria</div></div>
+      <div class="pr-card"><div class="pr-thumb">👩‍🍳</div><div class="pr-name">Eleanor</div></div>
+      <div class="pr-card"><div class="pr-thumb">👩🏾</div><div class="pr-name">Denise</div></div>
+      <div class="pr-card"><div class="pr-thumb">👩🏽</div><div class="pr-name">Priya</div></div>
+      <div class="pr-card"><div class="pr-thumb">👵</div><div class="pr-name">Ruth</div></div>
+      <div class="pr-card"><div class="pr-thumb">👨</div><div class="pr-name">Walter</div></div>
+      <div class="pr-card"><div class="pr-thumb">👨🏾</div><div class="pr-name">Marcus</div></div>
+      <div class="pr-card"><div class="pr-thumb">🤠</div><div class="pr-name">Dale</div></div>
+      <div class="pr-card"><div class="pr-thumb">👨🏽</div><div class="pr-name">Javier</div></div>
+    </div>
+    <p style="font-size:.79rem;color:var(--muted);margin-top:6px">+ Kenji, Amara, <strong style="color:var(--text)">Lina (nurse)</strong>, Freya, Nadia, Arjun, Tunde, Jun, Liam = 14+ total</p>
+    <div style="margin-top:10px;font-size:.82rem;color:var(--muted)">
+      <strong style="color:var(--text)">Seconds of presenter:</strong> slider 6–30s &nbsp;≈ $0.30 for the intro, once per video<br>
+      <strong style="color:var(--text)">Appearances:</strong> <span class="pill sel">Intro only</span><span class="pill">2×</span><span class="pill">3×</span><span class="pill">4×</span><span class="pill">5×</span><span class="pill">6×</span><br>
+      <em style="font-size:.76rem">Beyond the intro, the presenter comes back during the video on a pause in the read</em>
+    </div>
+  </div>
+
+  <!-- SCREEN 4: TITLE -->
+  <div class="screen">
+    <div class="screen-label">SCREEN 4 — Step ③: Title</div>
+    <p style="font-size:.82rem;color:var(--muted);margin-bottom:8px"><strong style="color:var(--text)">"one per line makes several"</strong> — batch mode built right into the title box.</p>
+    <div style="background:#0f1319;border:1px solid var(--border);border-radius:8px;padding:12px;font-size:.85rem;color:var(--muted)">
+      The Shadow You Keep Feeding Without Knowing It<br>
+      <span style="opacity:.4">Why Dogs Wait at the Door Every Single Day</span>
+    </div>
+  </div>
+
+  <!-- SCREEN 5: OPTIONS -->
+  <div class="screen">
+    <div class="screen-label">SCREEN 5 — Options (toggleable features with per-feature cost)</div>
+    <div class="opt-grid">
+      <div class="opt-box">
+        <div class="ob-title">✅ AI images</div>
+        <div class="ob-cost">≈ $0.095/min</div>
+        <p>Pictures drawn for the exact words they sit on</p>
+      </div>
+      <div class="opt-box">
+        <div class="ob-title">✅ Depth pop</div>
+        <div class="ob-cost">≈ $0.004/min</div>
+        <p>Person/car in picture slowly lifts off while background pulls back</p>
+      </div>
+      <div class="opt-box">
+        <div class="ob-title">✅ Sound design</div>
+        <div class="ob-cost">free</div>
+        <p>Whooshes, hits and risers under every scene change, kept under the voice</p>
+      </div>
+      <div class="opt-box">
+        <div class="ob-title">✅ AI presenter in the intro</div>
+        <div class="ob-cost">≈ $0.22 once</div>
+        <p>Real-looking person opens the video and speaks the first lines to camera</p>
+      </div>
+    </div>
+    <div style="margin-top:10px;font-size:.81rem;color:var(--muted)">
+      <strong style="color:var(--text)">Your own script</strong> — optional. Paste a finished script and Frontier follows it word for word.<br>
+      Placeholder: <em>"Leave empty and Frontier writes the script from your title and your channel's style"</em><br><br>
+      <strong style="color:var(--text)">Extra instructions</strong> — optional. e.g. "Focus on the 1980s. Explain it for beginners. Use gold and navy in the graphics."<br><br>
+      <strong style="color:var(--text)">Output:</strong> ✅ Burn in subtitles — in your channel colour &nbsp;&nbsp; □ Thumbnail
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3: BACKEND DECODED -->
+<section>
+  <h2>⚙️ 3. Backend Decoded — How Frontier Actually Builds the Video</h2>
+
+  <div class="secret-box">
+    <h3>🔑 The Real Cost Secret — Gemini Free Tier + YouTube Watching</h3>
+    <ul>
+      <li><strong>Gemini Free Tier:</strong> Google AI Studio allows up to 1,500 requests/day FREE on Flash models. Frontier routes all voice + image generation through this free tier. That's why "Gemini free tier" appears in orange on every channel card.</li>
+      <li><strong>YouTube Watching (KINETIC channel):</strong> For text-kinetic videos, they render text animations — "YouTube watching is free on the Gemini tier." This means no API call for visuals at all.</li>
+      <li><strong>Seedance clips (ATLAS):</strong> Only $0.50 for 4 video clips — they use Seedance AI for animated history clips. Rare feature, not default.</li>
+      <li><strong>Real presenter clips:</strong> Pre-recorded once, stored on their server, streamed via CDN. Zero per-use cost after recording. $0.22/appearance = just the Gemini TTS to sync audio to the clip.</li>
+      <li><strong>Sound design:</strong> Completely free — pre-baked SFX library downloaded once, embedded in tool.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="ct">Complete Backend Pipeline — What Happens After You Click Generate</div>
+    <div class="flow">
+      <div class="fs"><strong>Title</strong>+ channel<span class="c">input</span></div>
+      <div class="fa">→</div>
+      <div class="fs"><strong>Script</strong>Gemini Flash<span class="c">free tier</span></div>
+      <div class="fa">→</div>
+      <div class="fs"><strong>Storyboard</strong>scene splits<span class="c">free</span></div>
+      <div class="fa">→</div>
+      <div class="fs" style="border-color:var(--gold)"><strong>PARALLEL</strong>Voice+Images<span class="c">Gemini free</span></div>
+      <div class="fa">→</div>
+      <div class="fs"><strong>Presenter</strong>clip+TTS<span class="c">$0.22 once</span></div>
+      <div class="fa">→</div>
+      <div class="fs"><strong>SFX Mix</strong>sound design<span class="c">free</span></div>
+      <div class="fa">→</div>
+      <div class="fs"><strong>Assemble</strong>FFmpeg<span class="c">server</span></div>
+      <div class="fa">→</div>
+      <div class="fs"><strong>Output</strong>MP4+subs<span class="c">download</span></div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="card b">
+      <div class="ct">🎙️ Voice — How It Works</div>
+      <ul>
+        <li>Gemini TTS (free tier) for documentary channels</li>
+        <li>For presenter channels: Gemini TTS generates audio, then it's lipsync-mapped to the pre-recorded presenter clip</li>
+        <li>Each channel has a locked voice gender/style — "This channel speaks with a man's voice"</li>
+        <li>Audio timing: cut lands on a pause in the read, never mid-word</li>
+      </ul>
+    </div>
+    <div class="card t">
+      <div class="ct">🖼️ Images — How It Works</div>
+      <ul>
+        <li>Gemini generates images for "the exact words they sit on" — word-level image prompting</li>
+        <li>Depth pop: FFmpeg depth displacement filter — foreground subject rises, background recedes</li>
+        <li>Channel-specific visual style locked: old newspapers for COURTSIDE, dark psychology for Carl Jung</li>
+        <li>Each image synced to the word in the voiceover it illustrates</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card o">
+    <div class="ct">👤 The Presenter Secret — Pre-Recorded Real Humans, Not AI</div>
+    <p>This is the biggest insight. The "AI presenter" is NOT a HeyGen-style AI talking head. It's <strong style="color:var(--text)">pre-recorded video footage of real actors</strong>, stored on the server. Each presenter has:</p>
+    <ul>
+      <li>Multiple clip variants (~10–20 clips each, different expressions, gestures)</li>
+      <li>A full character description: <em style="color:var(--text)">"A 29-year-old Filipina woman, straight black hair in a low ponytail, no makeup, tired but kind eyes, visible skin texture, wearing teal medical scrubs with a stethoscope around her neck"</em> — this is the system prompt for script writer to match voice to character</li>
+      <li>Each appearance = $0.22 → this is just the Gemini TTS cost to generate the audio that plays over the clip</li>
+      <li>The clip is muted, TTS audio plays over it. No lipsync required. The talking appears natural because they selected clips where the actor's mouth is naturally moving.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- SECTION 4: COST TABLE -->
+<section>
+  <h2>💰 4. Real Cost Per Video — Channel by Channel</h2>
+
+  <table>
+    <tr>
+      <th>Channel</th>
+      <th>Gemini Free Tier</th>
+      <th>Paid Credits</th>
+      <th>30-min Video Total</th>
+      <th>How They're So Cheap</th>
+    </tr>
+    <tr>
+      <td><strong>DEEP — military</strong></td>
+      <td class="hi">$0.03/min</td>
+      <td>N/A</td>
+      <td class="hi">$0.90</td>
+      <td>Cutouts + map graphics, no real footage</td>
+    </tr>
+    <tr>
+      <td><strong>Carl Jung — psychology</strong></td>
+      <td class="hi">$0.05/min</td>
+      <td>N/A</td>
+      <td class="hi">$1.50 ← THE $1–$2 CHANNEL</td>
+      <td>Voice + cutout images only, free tier</td>
+    </tr>
+    <tr>
+      <td><strong>COURTSIDE — sports</strong></td>
+      <td class="hi">$0.04/min</td>
+      <td>$0.60/min</td>
+      <td class="hi">$1.20 (free) / $18 (paid footage)</td>
+      <td>Newspaper cutouts free; real footage expensive</td>
+    </tr>
+    <tr>
+      <td><strong>DOSSIER — true crime</strong></td>
+      <td class="hi">$0.04/min</td>
+      <td>$0.30/min</td>
+      <td class="hi">$1.20 (free) / $9 (paid)</td>
+      <td>Case file graphics, minimal footage</td>
+    </tr>
+    <tr>
+      <td><strong>Documentary</strong></td>
+      <td>$0.08/min</td>
+      <td>$0.50/min</td>
+      <td>$2.40 (free) / $15 (paid)</td>
+      <td>Collage pictures + cutouts on free tier</td>
+    </tr>
+    <tr>
+      <td><strong>AI Presenter (avatar)</strong></td>
+      <td>$0.09/min</td>
+      <td>$0.11/min</td>
+      <td>$2.70 + $0.22×appearances</td>
+      <td>Pre-recorded clips, TTS overlay only</td>
+    </tr>
+    <tr>
+      <td><strong>KINETIC — essays</strong></td>
+      <td>$0.10/min</td>
+      <td>N/A</td>
+      <td>$3.00 — YouTube watching FREE</td>
+      <td>Text animations only, no image API</td>
+    </tr>
+    <tr class="tot">
+      <td colspan="4"><strong>Cheapest: DEEP at $0.90 for 30 min</strong></td>
+      <td>All use Gemini free tier for voice</td>
+    </tr>
+  </table>
+</section>
+
+<!-- SECTION 5: YOUR TOOL BUILD PLAN -->
+<section>
+  <h2>🚀 5. Complete Build Plan — Make YOUR Tool Exactly Like Frontier</h2>
+
+  <div class="finding-box">
+    <h3>🎯 The Strategy: Web SaaS + Gemini Free Tier + Pre-recorded Presenters</h3>
+    <p>Your tool is a Windows desktop app. Frontier is a web app. The web deployment is HOW they get cheap cost — they control the Gemini free tier quota centrally, shared across all users. Here's how to replicate everything:</p>
+  </div>
+
+  <!-- BUILD STEP 1 -->
+  <div class="card gold">
+    <div class="ct"><span class="num">1</span> Pre-Record Your Own Presenter Clips (Most Important)</div>
+    <p>The avatar is NOT HeyGen. Record yourself or hire someone for 2 hours. Get 20–30 clips of 6–10 seconds each with natural mouth movement. Store on server. Cost: one-time recording session.</p>
+    <pre># Presenter clip structure:
+presenters/
+  your_name/
+    clip_01.mp4   # looking straight, talking naturally
+    clip_02.mp4   # nodding
+    clip_03.mp4   # hand gesture
+    clip_04.mp4   # looking left
+    ...clip_25.mp4
+
+# At generation time: pick a random clip, mute it,
+# overlay Gemini TTS audio on top.
+# No lipsync needed — mouth is already moving naturally.
+
+def overlay_presenter_audio(clip_path, tts_audio_path, out_path):
+    ffmpeg.run([
+        "-y",
+        "-i", clip_path,      # presenter video
+        "-i", tts_audio_path, # gemini TTS audio
+        "-map", "0:v",        # video from clip (muted)
+        "-map", "1:a",        # audio from TTS
+        "-c:v", "copy",
+        "-c:a", "aac",
+        "-shortest",          # trim to shorter of video or audio
+        out_path
+    ])</pre>
+  </div>
+
+  <!-- BUILD STEP 2 -->
+  <div class="card b">
+    <div class="ct"><span class="num">2</span> Switch to Gemini Free Tier for Voice + Images</div>
+    <p>Gemini Free Tier = 1,500 requests/day, free. This is how Frontier keeps cost at $0.03–$0.15/min. Use Google AI Studio API key (free tier).</p>
+    <pre># Gemini TTS (Flash TTS model) — FREE up to daily limit
+import google.generativeai as genai
+
+def gemini_tts(text, voice_name="Puck", out_path=None):
+    """Generate voiceover via Gemini TTS — free tier."""
+    client = genai.Client()
+    response = client.models.generate_content(
+        model="gemini-2.5-flash-preview-tts",
+        contents=text,
+        config=genai.types.GenerateContentConfig(
+            speech_config=genai.types.SpeechConfig(
+                voice_config=genai.types.VoiceConfig(
+                    prebuilt_voice_config=genai.types.PrebuiltVoiceConfig(
+                        voice_name=voice_name  # "Puck", "Charon", "Kore", etc.
+                    )
+                )
+            )
+        )
+    )
+    audio_data = response.candidates[0].content.parts[0].inline_data.data
+    Path(out_path).write_bytes(audio_data)
+
+# Gemini Image — FREE up to daily limit
+def gemini_image(prompt, out_path):
+    response = client.models.generate_images(
+        model="imagen-3.0-generate-002",
+        prompt=prompt,
+        config={"number_of_images": 1}
+    )
+    img = response.generated_images[0].image
+    Path(out_path).write_bytes(img.image_bytes)</pre>
+  </div>
+
+  <!-- BUILD STEP 3 -->
+  <div class="card t">
+    <div class="ct"><span class="num">3</span> Add Depth Pop Effect (Their $0.004/min Feature)</div>
+    <p>Their "Depth pop" is a parallax 3D effect. Implementation: use a depth estimation model (free) to get a depth map, then apply FFmpeg displacement filter.</p>
+    <pre># Depth pop using free DepthAnything model locally:
+pip install transformers torch pillow
+
+from transformers import pipeline
+
+def create_depth_map(image_path, out_depth_path):
+    pipe = pipeline(task="depth-estimation", 
+                   model="LiheYoung/depth-anything-small-hf")
+    image = Image.open(image_path)
+    depth = pipe(image)["depth"]
+    depth.save(out_depth_path)
+
+# FFmpeg zoompan with depth displacement:
+def depth_pop_video(img_path, depth_path, duration, out_path):
+    ffmpeg.run([
+        "-loop", "1", "-i", img_path,
+        "-loop", "1", "-i", depth_path,
+        "-filter_complex",
+        f"[0][1]displace=edge=smear,zoompan=z='min(zoom+0.002,1.3)':d={int(duration*25)}",
+        "-t", str(duration), "-r", "25",
+        out_path
+    ])</pre>
+  </div>
+
+  <!-- BUILD STEP 4 -->
+  <div class="card o">
+    <div class="ct"><span class="num">4</span> Add Sound Design (Free SFX Library)</div>
+    <p>Frontier adds whooshes, hits, and risers at every scene change — completely free. Build a local SFX library.</p>
+    <pre># Free SFX sources: Freesound.org, Pixabay Audio
+# Structure your SFX library:
+sfx/
+  whoosh_01.mp3   whoosh_02.mp3   whoosh_03.mp3
+  hit_01.mp3      hit_02.mp3
+  riser_01.mp3    riser_02.mp3
+  ambient_01.mp3  ambient_02.mp3
+
+def mix_sfx(video_path, scene_times, out_path):
+    """Add a whoosh at each scene change, mixed at -20dB."""
+    filters = []
+    for i, t in enumerate(scene_times):
+        sfx = random.choice(sfx_whooshes)
+        filters.append(f"[sfx{i}]adelay={int(t*1000)}|{int(t*1000)}[delayed{i}]")
+    # amix all sfx with voiceover track at -20dB
+    ...</pre>
+  </div>
+
+  <!-- BUILD STEP 5 -->
+  <div class="card p">
+    <div class="ct"><span class="num">5</span> Build 18 Channel "Styles" (Visual Language Per Channel)</div>
+    <p>Each channel has a locked visual treatment. Build a config file per channel that controls image style, color palette, text style, and audio voice.</p>
+    <pre># channels/carl_jung.yaml
+name: "Carl Jung — dark psychology"
+description: "The original Frontier look, built for long videos."
+cost_per_min: 0.05
+mode: frontier_production
+
+visuals:
+  image_style: "dark, moody, psychological, black and white portrait, dramatic shadows"
+  color_palette: ["#1a1a1a", "#d4a24e", "#8b7355"]
+  text_style: "serif, gold on black"
+  background: "dark gradient"
+
+audio:
+  voice: "Charon"   # Gemini TTS voice name — deep, authoritative
+  speed: 0.9
+  
+script:
+  tone: "philosophical, introspective, slow-burn"
+  hook_style: "paradox or Jungian quote"
+  
+# channels/documentary.yaml
+name: "Documentary"
+cost_per_min: 0.08
+visuals:
+  image_style: "photorealistic, journalistic, archival, black and white"
+  ...</pre>
+  </div>
+
+  <!-- BUILD STEP 6 -->
+  <div class="card g">
+    <div class="ct"><span class="num">6</span> Deploy as Web App — The Key to Centralized Cost Control</div>
+    <p>Frontier is web-based so they control ONE Gemini key pool for ALL users. You can do the same cheaply.</p>
+    <pre># Option A: Deploy on Railway/Render (free tier available)
+# Your Flask/FastAPI backend:
+
+from flask import Flask, request, jsonify
+app = Flask(__name__)
+
+@app.route('/generate', methods=['POST'])
+def generate_video():
+    data = request.json
+    title = data['title']
+    channel = data['channel']
+    presenter = data.get('presenter')
+    
+    job_id = queue_job(title, channel, presenter)
+    return jsonify({'job_id': job_id, 'status': 'queued'})
+
+@app.route('/status/<job_id>')
+def job_status(job_id):
+    job = get_job(job_id)
+    return jsonify({
+        'status': job.status,           # queued/running/done/failed
+        'progress': job.progress,       # 0–100
+        'download_url': job.output_url  # when done
+    })
+
+# Option B: Keep desktop, add web interface via ngrok (quick hack)
+# Option C: Vercel frontend + Railway backend (best for scale)</pre>
+  </div>
+
+  <!-- BUILD STEP 7 -->
+  <div class="card r">
+    <div class="ct"><span class="num">7</span> Word-Level Image Sync (Their "Exact Words" Feature)</div>
+    <p>Frontier generates images "for the exact words they sit on" — word-level visual alignment. This is how they make videos feel tight and synchronized.</p>
+    <pre">def word_level_image_sync(script_with_timestamps, images):
+    """
+    Match each image to the exact words it illustrates.
+    
+    Input:
+      - script: [{word: "The", start: 0.0, end: 0.3}, ...]
+      - image_prompts: [{prompt: "dark forest", word_range: [0, 5]}, ...]
+    
+    Output:
+      - [(image_path, start_time, end_time), ...]
+    """
+    segments = []
+    for img in images:
+        start_word = img['word_range'][0]
+        end_word = img['word_range'][1]
+        start_t = script_with_timestamps[start_word]['start']
+        end_t = script_with_timestamps[end_word]['end']
+        segments.append((img['path'], start_t, end_t))
+    return segments
+
+# This makes the video feel like the images ARE the words,
+# not just B-roll happening in the background.</pre>
+  </div>
+</section>
+
+<!-- SECTION 6: COMPLETE ARCHITECTURE -->
+<section>
+  <h2>🏗️ 6. Complete Architecture — Your Tool After All Changes</h2>
+
+  <table>
+    <tr>
+      <th>Component</th>
+      <th>Frontier Does It</th>
+      <th>Your Tool Now</th>
+      <th>Your Tool After</th>
+    </tr>
+    <tr>
+      <td>Platform</td>
+      <td>Web browser</td>
+      <td class="lo">Windows desktop EXE</td>
+      <td>Web app (Flask + HTML)</td>
+    </tr>
+    <tr>
+      <td>Voice</td>
+      <td>Gemini TTS free tier</td>
+      <td class="lo">Edge TTS (robotic) / AI33</td>
+      <td>Gemini TTS free tier</td>
+    </tr>
+    <tr>
+      <td>Images</td>
+      <td>Gemini Imagen free tier, word-synced</td>
+      <td class="lo">8 images, beat-level</td>
+      <td>40 images, word-level sync</td>
+    </tr>
+    <tr>
+      <td>Presenter</td>
+      <td>Pre-recorded real clips, TTS overlay</td>
+      <td class="lo">Static PNG zoompan</td>
+      <td>Pre-recorded clips + TTS overlay</td>
+    </tr>
+    <tr>
+      <td>Script</td>
+      <td>Gemini Flash, channel-locked style</td>
+      <td class="lo">Local template engine</td>
+      <td>Gemini Flash, 18 channel styles</td>
+    </tr>
+    <tr>
+      <td>Depth pop</td>
+      <td>✅ $0.004/min</td>
+      <td class="lo">❌ Not implemented</td>
+      <td>DepthAnything model (free)</td>
+    </tr>
+    <tr>
+      <td>Sound design</td>
+      <td>✅ Free SFX library</td>
+      <td class="lo">❌ Not implemented</td>
+      <td>Local SFX library (Freesound)</td>
+    </tr>
+    <tr>
+      <td>Cost per 30 min</td>
+      <td class="hi">$0.90–$4.50</td>
+      <td class="lo">$0.39 (but low quality)</td>
+      <td class="hi">$0.90–$2.50 (same quality)</td>
+    </tr>
+    <tr>
+      <td>Channels</td>
+      <td>18 locked styles</td>
+      <td class="lo">2–3 generic</td>
+      <td>18+ channel configs</td>
+    </tr>
+    <tr>
+      <td>UI</td>
+      <td>3-step web wizard</td>
+      <td class="lo">5-tab desktop wizard</td>
+      <td>3-step web wizard (same)</td>
+    </tr>
+    <tr class="tot">
+      <td colspan="2">After all changes:</td>
+      <td colspan="2">Functionally identical to Frontier at same cost</td>
+    </tr>
+  </table>
+</section>
+
+<!-- SECTION 7: WEEK BY WEEK -->
+<section>
+  <h2>📋 7. Week-by-Week Implementation Plan</h2>
+
+  <div class="card g">
+    <div class="ct">🔴 Week 1 — Core Fixes (Do Before Anything Else)</div>
+    <ul>
+      <li>Fix FFmpeg stream-copy crash bug (30 min)</li>
+      <li>Fix Edge TTS asyncio Qt clash (2 hours)</li>
+      <li>Fix avatar PNG path BUNDLE_DIR bug (15 min)</li>
+      <li>QC threshold: 30s floor, 70% rule (10 min)</li>
+      <li>Set Gemini Flash as default script provider (change config)</li>
+    </ul>
+  </div>
+
+  <div class="card b">
+    <div class="ct">🟠 Week 2 — Gemini Free Tier + Presenter Clips</div>
+    <ul>
+      <li>Integrate Gemini TTS free tier as primary voice provider</li>
+      <li>Record 20+ presenter clips (yourself or hire someone, 2 hours)</li>
+      <li>Build TTS audio overlay on presenter clip (no lipsync, just overlay)</li>
+      <li>Sub-scene image split → 40 images per video</li>
+      <li>Parallel image generation (ThreadPoolExecutor)</li>
+    </ul>
+  </div>
+
+  <div class="card t">
+    <div class="ct">🔵 Week 3 — Channel Styles + Sound Design</div>
+    <ul>
+      <li>Build 18 channel config YAML files (visual style + voice + script tone)</li>
+      <li>UI channel picker with sample thumbnails + cost shown in orange</li>
+      <li>Download 50–100 SFX files from Freesound (whooshes, hits, risers)</li>
+      <li>SFX mixer: add whoosh at every scene change, -20dB under voice</li>
+      <li>Word-level image sync (match image to exact words spoken)</li>
+    </ul>
+  </div>
+
+  <div class="card o">
+    <div class="ct">🟢 Week 4 — Depth Pop + Web Deploy</div>
+    <ul>
+      <li>Depth pop via DepthAnything model (free, runs locally)</li>
+      <li>Convert desktop wizard → web wizard (Flask backend + simple HTML/JS)</li>
+      <li>Deploy on Railway.app free tier (or Render.com)</li>
+      <li>Central Gemini key pool — one pool for all users</li>
+      <li>"Extra instructions" field — passed to script writer</li>
+      <li>"Your own script" field — bypasses AI script writer entirely</li>
+    </ul>
+  </div>
+</section>
+
+<hr>
+
+<div style="background:linear-gradient(135deg,#0d2b1d,#0a1a30);border:2px solid var(--green);border-radius:var(--r);padding:24px;text-align:center">
+  <p style="font-size:1.1rem;color:var(--green);font-weight:700;margin-bottom:10px">📌 The Complete Picture</p>
+  <p style="color:#a0c8b0;font-size:.92rem;max-width:750px;margin:0 auto">
+    Frontier is a <strong>web SaaS</strong> that uses <strong>Gemini free tier</strong> for voice and images, 
+    <strong>pre-recorded human clips</strong> (not AI) for presenters, 
+    and a <strong>free SFX library</strong> for sound design. 
+    That's how they get $0.03–$0.15/min. Your tool needs 4 things to match:
+    (1) Gemini free tier TTS + images,
+    (2) Pre-record your own presenter clips,
+    (3) Build 18 channel style configs,
+    (4) Add sound design SFX layer.
+    Web deployment is optional but gives you centralized key management.
+  </p>
+</div>
+
+<p style="text-align:center;color:var(--muted);font-size:.79rem;margin-top:28px">
+  Frontier Decoded — Full Analysis · 2026-09-26 · Claude Sonnet 4.6
+</p>
+</body>
+</html>

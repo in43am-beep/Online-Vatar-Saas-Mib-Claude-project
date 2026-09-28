@@ -1,0 +1,17 @@
+name: ANALOG — The Machines That Changed Music
+description: The machine on screen, its sound explained, the people who made it...
+cost_per_min_free: 0.1
+niche: Music history, vintage instruments, audio technology.
+default_minutes: 20
+mode: frontier
+visuals:
+  image_style: vintage synthesizers and audio equipment, recording studio photography,
+    warm analog tones, 1970s-80s aesthetic, close-up of knobs and dials
+audio:
+  voice_provider: gemini_tts
+  voice: Orbit
+  speed: 0.95
+script:
+  tone: music enthusiast, warm nostalgia, technical but accessible
+  hook_style: the sound that changed everything
+sfx: false

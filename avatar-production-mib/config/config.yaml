@@ -1,0 +1,348 @@
+channels:
+  behind-the-hug:
+    name: Behind The Hug
+    niche: Emotional soldier-dog reunion stories for a 65+ audience.
+    default_minutes: 30
+    mode: avatar
+    presenter: maria
+    voice:
+      provider: gemini-tts
+      voice_id: Kore
+    subtitles: true
+    sfx: true
+    depth_pop: false
+    image_style: 'Photorealistic, warm, emotional, cinematic. Golden hour light, soft
+      bokeh, intimate close-up. No text, no watermarks.
+
+      '
+    avatar_clip_mode: static
+  kustorez-amish:
+    name: Kustorez Amish
+    niche: Amish gardening & self-reliant home wisdom for seniors.
+    default_minutes: 15
+    mode: avatar
+    presenter: walter
+    voice:
+      provider: gemini-tts
+      voice_id: Puck
+    subtitles: false
+    sfx: true
+    depth_pop: false
+    image_style: 'Rustic, pastoral, warm natural light. Farm, wood, earth tones. Photorealistic.
+      No text, no watermarks.
+
+      '
+  documentary:
+    name: Documentary
+    niche: Real stories told like a streaming documentary.
+    default_minutes: 20
+    mode: frontier
+    subtitles: true
+    sfx: true
+    depth_pop: true
+    cost_per_min: 0.08
+    voice:
+      provider: gemini-tts
+      voice_id: Charon
+    image_style: 'Photorealistic, journalistic, archival, dramatic black and white
+      tones. Cinematic 16:9. No text, no watermarks.
+
+      '
+  carl-jung:
+    name: Carl Jung — Dark Psychology
+    niche: Psychological concepts, shadow work, human nature.
+    default_minutes: 30
+    mode: frontier
+    subtitles: true
+    sfx: true
+    depth_pop: true
+    cost_per_min: 0.05
+    voice:
+      provider: gemini-tts
+      voice_id: Charon
+    image_style: 'Dark, moody, psychological. Dramatic shadows, chiaroscuro lighting,
+      portrait style. Deep charcoals and golds. No text, no watermarks.
+
+      '
+    hook_style: paradox_or_quote
+    tone: philosophical, introspective, slow-burn
+  courtside:
+    name: COURTSIDE — Sports Documentaries
+    niche: Sports stories, athlete journeys, game-changing moments.
+    default_minutes: 25
+    mode: frontier
+    subtitles: true
+    sfx: true
+    depth_pop: false
+    cost_per_min: 0.04
+    voice:
+      provider: gemini-tts
+      voice_id: Fenrir
+    image_style: 'Real photos, old newspaper cutouts, Kodak film strips, VHS grain.
+      Athletic, kinetic energy. No text, no watermarks.
+
+      '
+  dossier:
+    name: DOSSIER — True Crime & Internet Mysteries
+    niche: True crime, cold cases, internet mysteries, conspiracies.
+    default_minutes: 25
+    mode: frontier
+    subtitles: true
+    sfx: true
+    depth_pop: true
+    cost_per_min: 0.04
+    voice:
+      provider: gemini-tts
+      voice_id: Fenrir
+    image_style: 'Case file aesthetic. Dark table, typed documents, red crosshairs,
+      evidence photos, surveillance stills. Gritty, noir. No text, no watermarks.
+
+      '
+    tone: tense, investigative, slow-reveal
+  deep:
+    name: DEEP — Military & Tech Mysteries
+    niche: Military history, weapons tech, classified programs.
+    default_minutes: 30
+    mode: frontier
+    subtitles: true
+    sfx: true
+    depth_pop: true
+    cost_per_min: 0.03
+    voice:
+      provider: gemini-tts
+      voice_id: Charon
+    image_style: 'Teal and orange color grade. Stencil dates, sonar displays, radar
+      screens, cutaway diagrams, map rooms. Cinematic military. No text, no watermarks.
+
+      '
+  kinetic:
+    name: KINETIC — Essays Where Words Are the Picture
+    niche: Philosophy, psychology, self-improvement essays.
+    default_minutes: 15
+    mode: frontier
+    subtitles: false
+    sfx: true
+    depth_pop: false
+    cost_per_min: 0.1
+    voice:
+      provider: gemini-tts
+      voice_id: Puck
+    image_style: 'Word clusters, white pages, phone card grids, comment sections,
+      kinetic typography aesthetic. Clean, minimal. No photos.
+
+      '
+  atlas:
+    name: ATLAS — Cartoon History Explainers
+    niche: History, ancient civilisations, world events animated.
+    default_minutes: 20
+    mode: frontier
+    subtitles: true
+    sfx: true
+    depth_pop: false
+    cost_per_min: 0.15
+    voice:
+      provider: gemini-tts
+      voice_id: Puck
+    image_style: 'Bold cartoon illustration. Time machine aesthetic, flipchart, paint
+      wipe transitions. Vibrant colors, comic style. No realism.
+
+      '
+    avatar_clip_mode: card
+  news:
+    name: NEWS — Geopolitics & News Explainers
+    niche: World news, geopolitics, current events explained.
+    default_minutes: 15
+    mode: frontier
+    subtitles: true
+    sfx: true
+    depth_pop: true
+    cost_per_min: 0.05
+    voice:
+      provider: gemini-tts
+      voice_id: Aoede
+    image_style: 'Newsroom aesthetic. Heat maps, arrow graphics, ticker overlays,
+      panel graphics, breaking news style. Professional, urgent. No text, no watermarks.
+
+      '
+    avatar_clip_mode: card
+  analog:
+    name: ANALOG — The Machines That Changed Music
+    niche: Music history, instruments, recording technology.
+    default_minutes: 20
+    mode: frontier
+    subtitles: true
+    sfx: true
+    depth_pop: false
+    cost_per_min: 0.1
+    voice:
+      provider: ai33
+      voice_id: edge_ca-ES-EnricNeural
+    image_style: 'Vintage machines, reel-to-reel, vinyl, studio equipment. Warm analog
+      tones, grain, retro. No text, no watermarks.
+
+      '
+    avatar_clip_mode: card
+  modern-homes:
+    name: Modern Homes
+    niche: Home advice, interior design, practical renovation tips.
+    default_minutes: 15
+    mode: avatar
+    subtitles: false
+    sfx: true
+    depth_pop: false
+    cost_per_min: 0.09
+    voice:
+      provider: gemini-tts
+      voice_id: Kore
+    image_style: 'Clean modern interiors, natural light, Scandinavian palette. Photorealistic,
+      lifestyle photography style. No text.
+
+      '
+  hustle:
+    name: HUSTLE — Make-Money & Youth Business
+    niche: Entrepreneurship, side hustles, financial freedom for youth.
+    default_minutes: 15
+    mode: frontier
+    subtitles: true
+    sfx: true
+    depth_pop: false
+    cost_per_min: 0.09
+    voice:
+      provider: gemini-tts
+      voice_id: Puck
+    image_style: 'Money, laptops, city life, young entrepreneurs. Dynamic, aspirational,
+      bright. No text, no watermarks.
+
+      '
+  legend:
+    name: LEGEND — Told in the Athlete's Own Voice
+    niche: Athlete biography narrated first-person.
+    default_minutes: 25
+    mode: avatar
+    subtitles: true
+    sfx: true
+    depth_pop: false
+    cost_per_min: 0.09
+    voice:
+      provider: gemini-tts
+      voice_id: Fenrir
+    image_style: 'Sports photography, locker rooms, training, stadiums. High contrast,
+      dramatic lighting. No text, no watermarks.
+
+      '
+  2d-stories:
+    name: 2D Stories — One Decision, Ten Years
+    niche: Second-person money and life decision stories.
+    default_minutes: 15
+    mode: frontier
+    subtitles: true
+    sfx: true
+    depth_pop: false
+    cost_per_min: 0.15
+    voice:
+      provider: gemini-tts
+      voice_id: Puck
+    image_style: '2D flat illustration. Character-driven panels, comic style. Clean
+      linework, limited palette. No realism.
+
+      '
+    avatar_clip_mode: video
+  ai-presenter:
+    name: AI Presenter
+    niche: General knowledge — a trusted face introduces any topic.
+    default_minutes: 20
+    mode: avatar
+    subtitles: true
+    sfx: true
+    depth_pop: true
+    cost_per_min: 0.11
+    voice:
+      provider: gemini-tts
+      voice_id: Charon
+    image_style: 'Photorealistic, editorial, clean. Professional studio lighting.
+      Neutral backgrounds. No text, no watermarks.
+
+      '
+    avatar_clip_mode: card
+  finance:
+    name: Finance & Investing Explained
+    niche: Personal finance, stock market, investing for beginners.
+    default_minutes: 20
+    mode: frontier
+    subtitles: true
+    sfx: true
+    depth_pop: true
+    cost_per_min: 0.08
+    voice:
+      provider: gemini-tts
+      voice_id: Charon
+    image_style: 'Charts, graphs, dollar bills, Wall Street, data visualization. Clean,
+      professional, authoritative. No text, no watermarks.
+
+      '
+  wellness:
+    name: Health & Wellness
+    niche: Mental health, mindfulness, physical wellbeing.
+    default_minutes: 20
+    mode: frontier
+    subtitles: true
+    sfx: true
+    depth_pop: false
+    cost_per_min: 0.08
+    voice:
+      provider: gemini-tts
+      voice_id: Kore
+    image_style: 'Serene nature, meditation, soft morning light, calming spaces. Warm
+      pastels, organic textures. No text, no watermarks.
+
+      '
+presenters:
+- id: maria
+  name: Maria
+  image: assets/avatars/maria.png
+  gender: f
+  description: '40-year-old warm Latina woman, shoulder-length dark brown hair, kind
+    expressive eyes, natural makeup, wearing a soft blue blouse.
+
+    '
+- id: walter
+  name: Walter
+  image: assets/avatars/walter.png
+  gender: m
+  description: '65-year-old wise American man, grey beard, wire-rim glasses, flannel
+    shirt, warm trustworthy expression.
+
+    '
+- id: priya
+  name: Priya
+  image: assets/avatars/priya.png
+  gender: f
+  description: '35-year-old South Asian woman, long black hair, professional blazer,
+    intelligent articulate expression.
+
+    '
+providers:
+  voice_order:
+  - channel
+  - gemini-tts
+  - edge
+  script_provider: local
+  ai33pro_llm_base_url: ''
+  ai33pro_llm_model: ''
+  gemini_llm_model: gemini-2.5-flash
+  claude_review: true
+  claude_base_url: https://api.anthropic.com
+  claude_model: claude-sonnet-4-6
+  image_order:
+  - gemini
+  - grok
+  - local
+  gemini_model: gemini-2.5-flash-image
+  grok_model: grok-imagine-image
+  presenter_seconds: 8
+  appearances: 2
+  presenter_watermark: true
+  images_per_45s: true
+  sfx_enabled: true
+  sfx_volume_db: -20
+  depth_pop_enabled: false

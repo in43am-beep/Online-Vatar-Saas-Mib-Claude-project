@@ -1,0 +1,16 @@
+name: AI Presenter
+description: A face people trust, then the pictures do the talking.
+cost_per_min_free: 0.09
+niche: General interest, lifestyle, education.
+default_minutes: 15
+mode: avatar
+visuals:
+  image_style: photorealistic, vibrant, lifestyle photography, warm natural lighting
+audio:
+  voice_provider: gemini_tts
+  voice: Kore
+  speed: 1.0
+script:
+  tone: friendly, conversational, relatable
+  hook_style: personal story or surprising fact
+sfx: false

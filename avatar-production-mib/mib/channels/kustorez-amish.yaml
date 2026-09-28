@@ -1,0 +1,17 @@
+name: Kustorez Amish
+description: Amish gardening & self-reliant home wisdom for seniors.
+cost_per_min_free: 0.05
+niche: Amish lifestyle, gardening, self-reliance, homesteading for seniors.
+default_minutes: 20
+mode: avatar
+visuals:
+  image_style: rural farm photography, vegetable garden, Amish countryside, wooden
+    tools, simple life, warm natural tones, sunrise over fields
+audio:
+  voice_provider: gemini_tts
+  voice: Orbit
+  speed: 0.9
+script:
+  tone: wise, calm, practical elder wisdom, gentle and reassuring
+  hook_style: old Amish saying or forgotten homesteading secret
+sfx: false
