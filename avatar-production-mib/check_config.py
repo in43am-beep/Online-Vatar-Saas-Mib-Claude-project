@@ -4,7 +4,7 @@ sec = load_secrets()
 print('=== API KEYS ===')
 print('gemini_api_key:', 'SET' if sec.get('gemini_api_key') else 'MISSING')
 print('ai33pro_api_key:', 'SET' if sec.get('ai33pro_api_key') else 'MISSING')
-print('anthropic_api_key:', 'SET' if sec.get('anthropic_api_key') else 'MISSING')
+print('claude_api_key:', 'SET' if sec.get('claude_api_key') else 'MISSING')
 print()
 print('=== CHANNELS ===')
 for cid, ch in (cfg.get('channels') or {}).items():

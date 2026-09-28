@@ -13,7 +13,7 @@ Side pages:  Channel Setup | Queue | Competitors | Settings
 
 Run: python web_app.py  →  http://localhost:7860
 """
-import json, queue, threading, time, uuid, mimetypes, re, subprocess
+import json, os, queue, threading, time, uuid, mimetypes, re, subprocess
 from pathlib import Path
 from flask import (Flask, Response, jsonify, render_template_string,
                    request, send_file)
@@ -24,7 +24,7 @@ from mib.config import load_config, load_secrets, save_config, save_secrets
 from mib.pipeline import run_pipeline
 
 app = Flask(__name__)
-app.secret_key = "mib-v4-2026"
+app.secret_key = os.environ.get("MIB_SECRET_KEY", "mib-v4-2026")  # P2-8: no hardcoded secret
 
 JOBS            = {}
 JOB_QUEUES      = {}
@@ -32,8 +32,43 @@ JOB_QUEUE_ORDER = []
 _worker_running = [False]
 _COMP_STOP      = [False]
 _COMP_Q         = queue.Queue()
-AVATAR_DIR      = Path("assets/avatars")
+ROOT            = Path(__file__).resolve().parent          # P2-2: repo-anchored
+AVATAR_DIR      = ROOT / "assets" / "avatars"
 AVATAR_DIR.mkdir(parents=True, exist_ok=True)
+
+# ─────────────────────────────────────────────────────────────────────────────
+# P0-2 · API TOKEN GATE — set env MIB_TOKEN to require X-MIB-Token (or ?token=)
+# on every /api/* route. Unset = local single-user run, no gate.
+# ─────────────────────────────────────────────────────────────────────────────
+_MIB_TOKEN = os.environ.get("MIB_TOKEN", "").strip()
+
+@app.before_request
+def _token_gate():
+    if not _MIB_TOKEN:
+        return None
+    if request.path.startswith("/api/"):
+        got = request.headers.get("X-MIB-Token") or request.args.get("token", "")
+        if got != _MIB_TOKEN:
+            return jsonify({"error": "unauthorized"}), 401
+    return None
+
+# ─────────────────────────────────────────────────────────────────────────────
+# P0-1 · PATH-TRAVERSAL HARDENING for avatar file serving
+# ─────────────────────────────────────────────────────────────────────────────
+def _safe_av_file(cid, name):
+    """Return the resolved avatar file path, or None if it escapes AVATAR_DIR."""
+    cid  = re.sub(r"[^a-zA-Z0-9._-]", "_", str(cid or ""))
+    name = re.sub(r"[^a-zA-Z0-9._-]", "_", str(name or ""))
+    if not cid or not name:
+        return None
+    root = AVATAR_DIR.resolve()
+    f = (root / cid / name).resolve()
+    try:
+        if not f.is_relative_to(root):
+            return None
+    except Exception:
+        return None
+    return f
 
 # ─────────────────────────────────────────────────────────────────────────────
 # THUMBNAIL HELPER — extract frame from avatar clip
@@ -44,8 +79,12 @@ def ensure_thumbnail(clip_path: Path) -> Path | None:
     if thumb.exists():
         return thumb
     try:
+        from mib.ffmpeg import exe as _ffmpeg_exe  # P2-3: imageio-ffmpeg aware
+        _ff = _ffmpeg_exe()
+        if not _ff:
+            return None
         subprocess.run(
-            ["ffmpeg", "-ss", "2", "-i", str(clip_path),
+            [_ff, "-ss", "2", "-i", str(clip_path),
              "-vframes", "1", "-q:v", "2", str(thumb), "-y"],
             capture_output=True, timeout=15)
         return thumb if thumb.exists() else None
@@ -396,6 +435,12 @@ input,select,textarea,button{font-family:inherit}
         <option value="avatar">AI Avatar</option>
         <option value="frontier">Frontier Production</option>
       </select></div>
+    <div class="mrow"><label class="lbl">Presenter Mode</label>
+      <select class="inp sel" id="newChClipMode">
+        <option value="static">Static PNG + Ken Burns (always works)</option>
+        <option value="card">Character Card overlay (needs sheet)</option>
+        <option value="video">AI Video Clips via Veo (needs Gemini key)</option>
+      </select></div>
     <div style="display:flex;gap:7px;margin-top:10px">
       <button class="btn btn-gold" onclick="createChannel()">Create</button>
       <button class="btn btn-o" onclick="closeModal('chModal')">Cancel</button>
@@ -579,6 +624,13 @@ input,select,textarea,button{font-family:inherit}
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
       <div><div style="font-size:13px;font-weight:700">Avatar Clips</div>
         <div style="font-size:11px;color:var(--muted)">Upload 5-15s natural talking MP4 clips</div></div>
+      <div style="margin-left:auto;display:flex;gap:6px;align-items:center">
+        <select class="inp sel" id="clipModeSel" style="font-size:11px;max-width:230px"
+          onchange="saveClipMode()" title="How the presenter appears in videos">
+          <option value="static">Presenter: Static PNG</option>
+          <option value="card">Presenter: Character Card</option>
+          <option value="video">Presenter: AI Video (Veo)</option>
+        </select>
       <label class="btn btn-gold" style="cursor:pointer;margin-left:auto">Upload MP4
         <input type="file" id="clipUpload" accept="video/mp4,video/*" multiple style="display:none"
           onchange="uploadClips(this)"></label>
@@ -707,6 +759,8 @@ input,select,textarea,button{font-family:inherit}
       <button class="snb on" onclick="sp2('api',this)">API Keys</button>
       <button class="snb" onclick="sp2('voice',this)">Voiceover</button>
       <button class="snb" onclick="sp2('images',this)">Images</button>
+      <button class="snb" onclick="sp2('script',this)">Script</button>
+      <button class="snb" onclick="sp2('drive',this)">Drive</button>
     </div>
     <div>
       <div id="sp2-api" class="sp2 on card">
@@ -727,13 +781,11 @@ input,select,textarea,button{font-family:inherit}
           <span class="pill" id="gemTTSpill">—</span></div>
         <div class="sr"><div class="sl"><strong>AI33 Pro TTS</strong></div>
           <span class="pill" id="ai33TTSpill">—</span></div>
-        <div class="sr"><div class="sl"><strong>Provider Order</strong></div>
-          <select class="inp sel" id="voiceOrder" style="width:230px"
-            onchange="saveProv('voice_order',this.value.split(','))">
-            <option value="channel,gemini-tts,edge">Channel → Gemini → Edge</option>
-            <option value="channel,ai33,gemini-tts,edge">Channel → AI33 → Gemini → Edge</option>
-            <option value="channel,edge">Channel → Edge only</option>
-          </select></div>
+        <div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.6">
+          The voice is picked per-channel (Channel Setup → Voice). If the channel's
+          provider fails, the pipeline automatically falls back to Edge TTS, then a
+          local tone track — so a video is never blocked by a dead TTS key.
+        </div>
       </div>
       <div id="sp2-images" class="sp2 card">
         <div class="sr"><div class="sl"><strong>Image Order</strong></div>
@@ -743,6 +795,29 @@ input,select,textarea,button{font-family:inherit}
             <option value="gemini,grok,local">Gemini → Grok → Local</option>
             <option value="gemini,local">Gemini → Local</option>
           </select></div>
+      </div>
+      <div id="sp2-script" class="sp2 card">
+        <div class="sr"><div class="sl"><strong>Script Provider</strong><span>Who writes the script</span></div>
+          <select class="inp sel" id="scriptProv" style="width:210px"
+            onchange="saveProv('script_provider',this.value)">
+            <option value="local">Local rules engine (free)</option>
+            <option value="gemini">Gemini LLM</option>
+            <option value="ai33pro">AI33 Pro LLM</option>
+          </select></div>
+        <div class="sr"><div class="sl"><strong>Claude Review</strong><span>Claude proofreads every script (needs Claude key)</span></div>
+          <label style="font-size:12px;display:flex;gap:8px;align-items:center">
+            <input type="checkbox" id="claudeRev" onchange="saveProv('claude_review',this.checked)"> Enable</label></div>
+      </div>
+      <div id="sp2-drive" class="sp2 card">
+        <div class="sr"><div class="sl"><strong>Auto-upload to Google Drive</strong><span>Upload finished videos after each job</span></div>
+          <label style="font-size:12px;display:flex;gap:8px;align-items:center">
+            <input type="checkbox" id="gdriveUp" onchange="saveProv('gdrive_auto_upload',this.checked)"> Enable</label></div>
+        <div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.6">
+          Browser OAuth cannot complete on a headless server — for server use, place a
+          <strong>gdrive_service_account.json</strong> in the config folder instead.
+          On a local PC you can connect via OAuth after placing
+          gdrive_credentials.json there (see mib/gdrive.py).
+        </div>
       </div>
     </div>
   </div>
@@ -960,7 +1035,7 @@ function updateLenInfo() {
   document.getElementById('lenDetail').textContent =
     `${lenV} minute video · ${Math.round(lenV * 140)} words of script · ~${Math.round(lenV * 60 / 45)} images`;
   // AR info
-  const ar = lenV <= 3 ? '9:16 Short' : lenV <= 10 ? '1:1' : '16:9';
+  const ar = lenV <= 3 ? '9:16 Short' : '16:9';
   document.getElementById('lenDetail').textContent +=
     ` · ${ar} aspect ratio`;
 }
@@ -1102,6 +1177,7 @@ async function loadSetup() {
   document.getElementById('csTraits').value = cs.traits||'';
   document.getElementById('csColors').value = cs.colors||'';
   document.getElementById('csBg').value = cs.background||'';
+  document.getElementById('clipModeSel').value = ch.avatar_clip_mode||'static';
   document.getElementById('masterPrompt').value = p.master||'';
   document.getElementById('shortPrompt').value = p.short||'';
   document.getElementById('negPrompt').value = p.negative||'';
@@ -1253,6 +1329,15 @@ async function saveChInfo() {
   if(d.ok){toast('Saved!','ok');cfg=await fetch('/api/config').then(r=>r.json());updateModeCounts();renderChPills();}
   else toast('Error: '+d.error,'er');
 }
+async function saveClipMode() {
+  if(!currentSetupCh) return;
+  const mode=document.getElementById('clipModeSel').value;
+  const r=await fetch('/api/channel/save',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({channel_id:currentSetupCh,avatar_clip_mode:mode})});
+  const d=await r.json();
+  if(d.ok){cfg=await fetch('/api/config').then(x=>x.json());toast('Presenter mode saved','ok');}
+  else toast('Error: '+d.error,'er');
+}
 async function deleteChannel() {
   if(!confirm('Delete?')) return;
   await fetch('/api/channel/delete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({channel_id:currentSetupCh})});
@@ -1263,7 +1348,8 @@ async function createChannel() {
   if(!cid){toast('ID required','er');return;}
   const body={channel_id:cid,name:document.getElementById('newChName').value.trim()||cid,
     niche:document.getElementById('newChNiche').value.trim(),mode:document.getElementById('newChMode').value,
-    avatar_clip_mode:'static',default_minutes:30};
+    avatar_clip_mode:document.getElementById('newChClipMode').value||'static',
+    default_minutes:30};
   const r=await fetch('/api/channel/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
   const d=await r.json();
   if(d.ok){toast('Created!','ok');closeModal('chModal');await fetch('/api/avatar-dir/create',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({channel_id:cid})});
@@ -1339,11 +1425,14 @@ async function loadSettings(){
   const gp=document.getElementById('gemTTSpill');const ap=document.getElementById('ai33TTSpill');
   gp.textContent=d.has_gemini?'Ready':'No key';gp.className='pill '+(d.has_gemini?'p-done':'p-err');
   ap.textContent=d.has_ai33?'Ready':'—';ap.className='pill '+(d.has_ai33?'p-done':'p-q');
+  if(d.script_provider)document.getElementById('scriptProv').value=d.script_provider;
+  document.getElementById('claudeRev').checked=!!d.claude_review;
+  document.getElementById('gdriveUp').checked=!!d.gdrive_auto_upload;
 }
 async function saveKeys(){
   const body={};const gem=document.getElementById('kGem').value.trim();const ai33=document.getElementById('kAi33').value.trim();
   const xai=document.getElementById('kXai').value.trim();const claude=document.getElementById('kClaude').value.trim();
-  if(gem)body.gemini_api_key=gem;if(ai33)body.ai33pro_api_key=ai33;if(xai)body.xai_api_key=xai;if(claude)body.anthropic_api_key=claude;
+  if(gem)body.gemini_api_key=gem;if(ai33)body.ai33pro_api_key=ai33;if(xai)body.xai_api_key=xai;if(claude)body.claude_api_key=claude;
   const r=await fetch('/api/settings/keys',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
   const d=await r.json();toast(d.ok?'Saved!':'Error: '+d.error,d.ok?'ok':'er');
 }
@@ -1380,16 +1469,17 @@ def api_settings():
     return jsonify({"has_gemini": bool(sec.get("gemini_api_key")),
                     "has_ai33": bool(sec.get("ai33pro_api_key")),
                     "has_xai": bool(sec.get("xai_api_key")),
-                    "has_claude": bool(sec.get("anthropic_api_key")),
-                    "voice_order": p.get("voice_order", ["channel","gemini-tts","edge"]),
+                    "has_claude": bool(sec.get("claude_api_key")),
                     "image_order": p.get("image_order", ["grok","gemini","local"]),
-                    "claude_review": p.get("claude_review", False)})
+                    "script_provider": p.get("script_provider", "local"),
+                    "claude_review": p.get("claude_review", False),
+                    "gdrive_auto_upload": p.get("gdrive_auto_upload", False)})
 
 @app.route("/api/settings/keys", methods=["POST"])
 def api_save_keys():
     try:
         sec = load_secrets(); data = request.json or {}
-        for k in ["gemini_api_key","ai33pro_api_key","xai_api_key","anthropic_api_key"]:
+        for k in ["gemini_api_key","ai33pro_api_key","xai_api_key","claude_api_key"]:
             if data.get(k): sec[k] = data[k]
         save_secrets(sec); return jsonify({"ok": True})
     except Exception as e: return jsonify({"ok": False, "error": str(e)})
@@ -1466,14 +1556,14 @@ def api_avatars_rich(cid):
 
 @app.route("/api/avatar-thumb/<cid>/<path:name>")
 def api_avatar_thumb(cid, name):
-    f = _av_dir(cid) / name
-    if not f.is_file(): return "Not found", 404
+    f = _safe_av_file(cid, name)
+    if not f or not f.is_file(): return "Not found", 404
     return send_file(str(f), mimetype="image/jpeg")
 
 @app.route("/api/avatar-clip/<cid>/<path:name>")
 def api_avatar_clip(cid, name):
-    f = _av_dir(cid) / name
-    if not f.is_file(): return "Not found", 404
+    f = _safe_av_file(cid, name)
+    if not f or not f.is_file(): return "Not found", 404
     mt, _ = mimetypes.guess_type(str(f))
     return send_file(str(f), mimetype=mt or "video/mp4")
 
@@ -1496,7 +1586,8 @@ def api_clip_upload():
 def api_clip_delete():
     try:
         data = request.json or {}
-        clip = _av_dir(data.get("channel_id", "")) / data.get("name", "")
+        clip = _safe_av_file(data.get("channel_id", ""), data.get("name", ""))
+        if not clip: return jsonify({"ok": False, "error": "invalid channel/name"})
         thumb = clip.parent / (clip.stem + "_thumb.jpg")
         if clip.is_file(): clip.unlink()
         if thumb.is_file(): thumb.unlink()
@@ -1567,9 +1658,8 @@ def api_parse_character():
 
         if api_key:
             # Use Gemini to parse
-            import google.generativeai as genai, json as _json
-            genai.configure(api_key=api_key)
-            model = genai.GenerativeModel("gemini-2.0-flash")
+            from google import genai as _genai, json as _json
+            _client = _genai.Client(api_key=api_key)
             prompt = f"""Extract character information from the text below.
 Return ONLY a JSON object with these exact keys (leave empty string if not found):
 name, age_desc, gender (Male/Female/Other), ethnicity, build, occupation,
@@ -1579,9 +1669,10 @@ Text:
 {text}
 
 JSON output only, no markdown:"""
-            resp = model.generate_content(
-                prompt,
-                generation_config=genai.types.GenerationConfig(temperature=0.2, max_output_tokens=1024)
+            resp = _client.models.generate_content(
+                model="gemini-2.0-flash",
+                contents=prompt,
+                config=_genai.types.GenerateContentConfig(temperature=0.2, max_output_tokens=1024)
             )
             raw = resp.text.strip()
             # Strip markdown fences if any
@@ -1627,7 +1718,6 @@ def api_ch_delete():
 # ── GENERATE ─────────────────────────────────────────────────────────────────
 def _ratio(mins):
     if mins <= 3:  return "9:16"
-    if mins <= 10: return "1:1"
     return "16:9"
 
 @app.route("/api/generate", methods=["POST"])
@@ -1638,6 +1728,10 @@ def api_generate():
         cid   = data.get("channel_id","").strip()
         mins  = int(data.get("minutes", 30))
         av    = data.get("avatar","")
+        try: psecs = max(5, min(15, int(data.get("presenter_seconds", 6))))
+        except (TypeError, ValueError): psecs = 6
+        try: apps = max(1, min(10, int(data.get("appearances", 1))))
+        except (TypeError, ValueError): apps = 1
         if not title or not cid: return jsonify({"error":"title and channel_id required"}), 400
         ratio  = _ratio(mins)
         job_id = str(uuid.uuid4())[:8]
@@ -1645,9 +1739,14 @@ def api_generate():
         JOB_QUEUES[job_id] = q
         JOBS[job_id] = {"job_id": job_id, "title": title, "channel_id": cid,
                         "avatar": av, "minutes": mins, "ratio": ratio,
+                        "presenter_seconds": psecs, "appearances": apps,
                         "status": "queued", "started_at": time.strftime("%H:%M:%S"),
                         "final_mp4": None, "error": None}
         JOB_QUEUE_ORDER.append(job_id)
+        if len(JOB_QUEUE_ORDER) > 500:  # P2-9: cap growth (finished jobs pruned separately)
+            old = [j for j in JOB_QUEUE_ORDER if JOBS.get(j,{}).get("status") not in ("queued","running")][:100]
+            for j in old:
+                JOB_QUEUE_ORDER.remove(j); JOBS.pop(j,None); JOB_QUEUES.pop(j,None)
         _maybe_start_worker()
         return jsonify({"job_id": job_id})
     except Exception as e: return jsonify({"error": str(e)}), 500
@@ -1665,8 +1764,17 @@ def _run_job(job_id):
         c = load_config(); sec = load_secrets()
         j = JOBS[job_id]; cid = j["channel_id"]
         ch = (c.get("channels") or {}).get(cid, {})
+        # P1-2: resolve the wizard-picked avatar clip to a real file (traversal-safe)
+        clip_path = ""
+        if j.get("avatar"):
+            f = _safe_av_file(cid, j["avatar"])
+            if f and f.is_file():
+                clip_path = str(f)
         opts = {"minutes_override": j["minutes"], "mode": ch.get("mode","avatar"),
-                "aspect_ratio": j["ratio"], "avatar_clip": j.get("avatar","")}
+                "aspect_ratio": j["ratio"], "avatar_clip": j.get("avatar",""),
+                "avatar_clip_path": clip_path,
+                "presenter_seconds": j.get("presenter_seconds", 6),
+                "appearances": j.get("appearances", 1)}
         q = JOB_QUEUES[job_id]
         result = run_pipeline(j["title"], cid, c, sec, opts=opts,
                               progress_cb=lambda pct,msg: q.put({"type":"progress","pct":pct,"msg":msg}),

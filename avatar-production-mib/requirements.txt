@@ -1,13 +1,11 @@
-PySide6
 requests
 pyyaml
 Pillow
 edge-tts
 imageio-ffmpeg
 yt-dlp
-plyer
-python-docx
 google-auth
 google-auth-oauthlib
 google-api-python-client
 google-genai
+Flask>=3.0
