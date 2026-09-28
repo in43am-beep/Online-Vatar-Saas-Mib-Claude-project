@@ -1,3 +1,14 @@
+---
+title: MIB Avatar Production v4
+emoji: 🎬
+colorFrom: gold
+colorTo: black
+sdk: docker
+app_port: 7860
+pinned: false
+license: other
+---
+
 # MIB Avatar Production System
 
 > **AI-powered YouTube video factory** — type a title, get a finished video.
@@ -76,14 +87,12 @@ pip install -r requirements.txt
 ```
 
 ### 2. Add API Keys
-```bash
-# Edit config/secrets.json (copy from secrets.example.json)
-{
-  "gemini_api_key": "AIza...",
-  "ai33pro_api_key": "ai33-...",
-  "xai_api_key": "xai-...",
-  "anthropic_api_key": "sk-ant-..."
-}
+```yaml
+# Edit config/secrets.yaml (copy from config/secrets.yaml.example)
+gemini_api_key: "AIza..."
+ai33pro_api_key: "ai33-..."
+xai_api_key: "xai-..."
+claude_api_key: "sk-ant-..."
 ```
 
 Or set them in the web UI → **Settings → API Keys**
@@ -104,7 +113,7 @@ avatar-production-mib/
 ├── START-APP.bat           # Windows one-click launcher
 ├── requirements.txt
 ├── config/
-│   ├── competitors.json    # Channel database (92 channels decoded)
+│   ├── competitors.json    # Channel database (92 channels, not yet decoded)
 │   └── secrets.example.json
 ├── mib/
 │   ├── pipeline.py         # Main orchestrator
@@ -144,7 +153,7 @@ avatar-production-mib/
 - ✅ **Bulk video generation** — paste 10 titles, generate 10 videos overnight
 - ✅ **Character consistency** — identity lock with master prompt across all scenes
 - ✅ **Quick Paste Auto-Fill** — paste any character description → Gemini fills all fields
-- ✅ **Competitor intelligence** — 92 channels decoded with Gemini AI
+- ✅ **Competitor intelligence** — 92-channel scrape→decode pipeline (run from the Competitors tab; nothing decoded yet)
 - ✅ **Multiple TTS providers** — Gemini, AI33 Pro, Edge TTS fallback chain
 - ✅ **Multiple image providers** — Grok → Gemini → local Pillow fallback
 - ✅ **Auto thumbnails** — extracted from avatar clips at startup
