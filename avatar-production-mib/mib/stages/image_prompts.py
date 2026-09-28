@@ -190,18 +190,16 @@ def generate_bulk_prompts(
         user_msg = _build_user_message(script, channel_cfg)
         _log(f"    image prompts: generating bulk prompts via Gemini…")
 
-        import google.generativeai as genai
-        genai.configure(api_key=api_key)
-        model = genai.GenerativeModel(
-            model_name="gemini-2.0-flash",
-            system_instruction=_SYSTEM,
-        )
+        from google import genai as _genai
+        _client = _genai.Client(api_key=api_key)
 
-        response = model.generate_content(
-            user_msg,
-            generation_config=genai.types.GenerationConfig(
+        response = _client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=user_msg,
+            config=_genai.types.GenerateContentConfig(
                 temperature=0.7,
                 max_output_tokens=8192,
+                system_instruction=_SYSTEM,
             ),
         )
         raw = response.text.strip()
