@@ -29,6 +29,16 @@ def _bundle_dir():
 
 def _app_dir():
     """Writable, persistent app dir (frozen) or source tree (dev)."""
+    # Server/container override: MIB_DATA_DIR points at a persistent volume
+    # (e.g. /data on Docker/Spaces hosts) so config + output survive restarts.
+    _data = os.environ.get("MIB_DATA_DIR")
+    if _data:
+        d = Path(_data)
+        try:
+            d.mkdir(parents=True, exist_ok=True)
+        except Exception:
+            pass
+        return d
     if getattr(sys, "frozen", False):
         base = os.environ.get("APPDATA") or str(Path.home())
         d = Path(base) / "AvatarProductionByMIB"
@@ -121,6 +131,7 @@ DEFAULT_CONFIG = {
         "claude_review": False,
         "claude_base_url": "https://api.anthropic.com",
         "claude_model": "",
+        "gdrive_auto_upload": False,
         "image_order": ["grok", "gemini", "local"],
         "gemini_model": "gemini-2.5-flash-image",
         "grok_model": "grok-imagine-image",

@@ -8,6 +8,7 @@ SCOPES = ["https://www.googleapis.com/auth/drive.file"]
 _CONFIG_DIR = None
 _CREDS_FILE = "gdrive_credentials.json"
 _TOKEN_FILE  = "gdrive_token.json"
+_SERVICE_ACCOUNT_FILE = "gdrive_service_account.json"  # server/headless path
 
 
 class DriveError(Exception):
@@ -19,13 +20,29 @@ def init(config_dir):
     _CONFIG_DIR = Path(config_dir)
 
 
+def service_account_path():
+    """Path of the service-account JSON, if present."""
+    if not _CONFIG_DIR:
+        return None
+    p = _CONFIG_DIR / _SERVICE_ACCOUNT_FILE
+    return p if p.is_file() else None
+
+
 def is_configured():
     if not _CONFIG_DIR: return False
-    return (_CONFIG_DIR / _TOKEN_FILE).is_file() and (_CONFIG_DIR / _CREDS_FILE).is_file()
+    return (service_account_path() is not None
+            or ((_CONFIG_DIR / _TOKEN_FILE).is_file()
+                and (_CONFIG_DIR / _CREDS_FILE).is_file()))
 
 
 def _load_creds():
     try:
+        # Server/headless path: service-account JSON (no browser needed).
+        sa = service_account_path()
+        if sa is not None:
+            from google.oauth2 import service_account
+            return service_account.Credentials.from_service_account_file(
+                str(sa), scopes=SCOPES)
         from google.oauth2.credentials import Credentials
         from google.auth.transport.requests import Request
         tp = _CONFIG_DIR / _TOKEN_FILE

@@ -46,7 +46,7 @@ def run_pipeline(title, channel_id, cfg, secrets, opts=None,
     """Run the full pipeline for one title.
 
     opts: {minutes_override, mode ("avatar"|"frontier"),
-           presenter_seconds, appearances}
+           presenter_seconds, appearances, avatar_clip (name), avatar_clip_path}
     Returns {"ok", "title", "job_dir", "final_mp4", "duration_s",
              "total_cost_usd", "qc_reasons", "error"}. Never raises.
     """
@@ -218,6 +218,18 @@ def run_pipeline(title, channel_id, cfg, secrets, opts=None,
         avatar_res = {"intro": "", "mids": []}
         if mode == "avatar":
             presenter = _find_presenter(cfg, channel.get("presenter"))
+            # P1-2: wizard-picked avatar clip → use its thumbnail as presenter image
+            _clip = opts.get("avatar_clip_path") or ""
+            if _clip:
+                _cp = Path(_clip)
+                if _cp.is_file():
+                    _thumb = _cp.parent / (_cp.stem + "_thumb.jpg")
+                    _img = str(_thumb) if _thumb.is_file() else (
+                        str(_cp) if _cp.suffix.lower() in
+                        (".jpg", ".jpeg", ".png", ".webp") else "")
+                    if _img:
+                        presenter = dict(presenter or {})
+                        presenter["image"] = _img
             # Read per-channel avatar clip mode (backend-locked)
             clip_mode = channel.get("avatar_clip_mode", "static")
             clip_secs = int(channel.get("avatar_clip_secs")
@@ -326,27 +338,13 @@ def run_pipeline(title, channel_id, cfg, secrets, opts=None,
             except Exception as e:  # noqa: BLE001
                 logger.log(f"    sfx: skipped: {e}")
 
-        # 5c. Actual thumbnail PNG (not just a text prompt)
+        # 5c. 1:1 avatar thumbnail — 1 title = 1 thumbnail.jpg, channel avatar
+        # identity-locked via the character sheet (port of local v1.2.0).
+        # Prompt-file-only when no image key (render_thumbnail decides).
         try:
-            from .thumbnail import generate_thumbnail
-            presenter_img = None
-            try:
-                presenter_id = (channel.get("presenter") or "")
-                p_list = cfg.get("presenters") or []
-                p_data = next(
-                    (p for p in p_list if p.get("id") == presenter_id), {})
-                rel = p_data.get("image", "")
-                if rel:
-                    from .config import ROOT as _ROOT, BUNDLE_DIR as _BDIR
-                    for base in (_ROOT, _BDIR):
-                        cand = base / rel
-                        if cand.is_file():
-                            presenter_img = str(cand)
-                            break
-            except Exception:  # noqa: BLE001
-                pass
-            generate_thumbnail(job_dir, scr, channel_id, cfg, secrets,
-                                presenter_image=presenter_img, logger=logger)
+            st_package.render_thumbnail(job_dir, scr.get("title", ""),
+                                        scr.get("topic", ""), channel_id,
+                                        cfg, secrets, logger)
         except Exception as e:  # noqa: BLE001
             logger.log(f"    thumbnail: skipped: {e}")
 
